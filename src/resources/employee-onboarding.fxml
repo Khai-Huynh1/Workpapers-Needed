@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+
+<VBox alignment="TOP_CENTER" prefHeight="473.0" prefWidth="601.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EmployeeOnboardingController">
+    
+   <children>
+      <!-- TextFlow for Greetings -->
+      <TextFlow fx:id="textFlow" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" textAlignment="CENTER">
+         <children>
+            <Text text="GREETINGS " />
+            <Text text="EMPLOYEE #" />
+            <Text text="000" /> <!-- Placeholder for dynamic content -->
+         </children>
+         <VBox.margin>
+            <Insets left="20.0" right="20.0" top="20.0" />
+         </VBox.margin>
+      </TextFlow>
+
+      <!-- RuleBook Section -->
+      <VBox alignment="TOP_CENTER" prefWidth="400.0" style="-fx-background-color: white;">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="THE BOOK">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Text>
+            <TextFlow fx:id="ruleTextFlow" prefHeight="200.0" prefWidth="400.0" style="-fx-background-color: white;" textAlignment="CENTER">
+               <!-- Rules will be dynamically added here -->
+            </TextFlow>
+         </children>
+         <VBox.margin>
+            <Insets left="70.0" right="70.0" top="20.0" />
+         </VBox.margin>
+      </VBox>
+
+      <!-- Go To Work Button -->
+      <Button fx:id="continueButton" onAction="#handleContinueClick" stylesheets="@style.css" text="GO TO WORK" textAlignment="CENTER" textFill="RED">
+         <font>
+            <Font name="System Bold Italic" size="24.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </Button>
+
+      <!-- Go Home Button -->
+      <Button fx:id="goBackButton" onAction="#handleGoBackClick" text="Go Home">
+         <font>
+            <Font size="24.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </Button>
+
+   </children>
+</VBox>
