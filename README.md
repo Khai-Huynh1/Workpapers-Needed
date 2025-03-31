@@ -5,8 +5,6 @@
 
 ## Repository Structure
 - **main**: The primary development branch where all stable features are merged.
-- **master**: The stable branch containing production-ready code.
-- **feature branches** (e.g., `feature-1`, `feature-2`): Branches for individual feature development by team members.
 
 ## Prerequisites
 Before setting up the project, ensure you have the following installed:
