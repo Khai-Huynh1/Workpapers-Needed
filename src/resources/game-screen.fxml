@@ -11,7 +11,9 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<VBox fx:id="rootVBox" alignment="CENTER" prefHeight="668.0" prefWidth="1320.0" style="-fx-background-color: gray;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GameScreenController">
+<VBox fx:id="rootVBox" alignment="CENTER" prefHeight="668.0" prefWidth="1320.0"
+      style="-fx-background-color: gray;" xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GameScreenController">
    <children>
       <Label fx:id="timerLabel" alignment="CENTER" prefHeight="88.0" prefWidth="326.0" text="10:00" textAlignment="CENTER">
          <font>
@@ -21,6 +23,7 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
       </Label>
+
       <HBox alignment="CENTER" prefHeight="175.0" prefWidth="200.0">
          <children>
             <TextFlow fx:id="clientInfo" prefHeight="149.0" prefWidth="185.0" style="-fx-background-color: white;" textAlignment="CENTER">
@@ -48,10 +51,8 @@
                </HBox.margin>
             </TextFlow>
          </children>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
       </HBox>
+
       <HBox alignment="TOP_CENTER" prefHeight="36.0" prefWidth="200.0">
          <children>
             <Button fx:id="cookedButton" mnemonicParsing="false" text="COOKED" textFill="#00fc19">
@@ -72,6 +73,7 @@
             <Insets top="10.0" />
          </VBox.margin>
       </HBox>
+
       <HBox alignment="CENTER" prefHeight="194.0" prefWidth="757.0" style="-fx-background-color: tan;">
          <children>
             <Button fx:id="bookButton" mnemonicParsing="false" prefHeight="100.0" prefWidth="132.0" style="-fx-background-color: brown;" text="The B.O.O.K">

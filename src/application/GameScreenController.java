@@ -3,6 +3,9 @@ package application;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -11,8 +14,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import java.util.Random;
-
 import javafx.application.Platform;
+import java.io.IOException;
 
 public class GameScreenController {
     private static final int GAME_DURATION_SECONDS = 600; // 10 minutes
@@ -52,15 +55,13 @@ public class GameScreenController {
         startCountdown();
         loadNewClient();
 
-        // Button event handlers
-        cookedButton.setOnAction(e -> handleDecision(false)); // "COOKED" means no errors
-        bookedButton.setOnAction(e -> handleDecision(true));  // "BOOKED" means errors present
-        // bookButton left without action for future implementation
+        cookedButton.setOnAction(e -> handleDecision(false));
+        bookedButton.setOnAction(e -> handleDecision(true));
     }
 
     private void startCountdown() {
         timeRemaining = GAME_DURATION_SECONDS;
-        
+
         countdownTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             timeRemaining--;
             updateTimerLabel();
@@ -68,7 +69,7 @@ public class GameScreenController {
                 gameOver();
             }
         }));
-        
+
         countdownTimer.setCycleCount(GAME_DURATION_SECONDS);
         countdownTimer.play();
     }
@@ -84,45 +85,36 @@ public class GameScreenController {
     private void gameOver() {
         countdownTimer.stop();
         game.endGame();
+
         Platform.runLater(() -> {
-            timerLabel.setText("GAME OVER");
-            clientInfo.getChildren().clear();
-            identification.getChildren().clear();
-            balanceSheet.getChildren().clear();
-            scoresAndStrikes.getChildren().clear();
-            String finalText = "Final Score: " + game.getScore() + "\nStrikes: " + game.getStrikes();
-            Text finalTextNode = new Text(finalText);
-            scoresAndStrikes.getChildren().add(finalTextNode);
-            System.out.println("Game Over Display: " + finalText + " | Children count: " + scoresAndStrikes.getChildren().size());
-            scoresAndStrikes.layout(); // Force layout refresh
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/game-over.fxml"));
+                Parent gameOverRoot = loader.load();
+
+                GameOverController controller = loader.getController();
+                controller.setFinalScore(game.getScore(), game.getStrikes());
+
+                Scene currentScene = timerLabel.getScene();
+                currentScene.setRoot(gameOverRoot);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 
     private void loadNewClient() {
-        // Create a new client (example data)
         currentClient = new Client("John Doe", 35, "123 Main St");
 
-        // Randomly decide if ID matches (30% chance of mismatch)
         if (random.nextDouble() < 0.3) {
-            currentId = new Identification(
-                "Jane Doe",       // Mismatched name
-                40,               // Mismatched age
-                "456 Oak Ave"     // Mismatched address
-            );
+            currentId = new Identification("Jane Doe", 40, "456 Oak Ave");
         } else {
-            currentId = new Identification(
-                currentClient.getName(),
-                currentClient.getAge(),
-                currentClient.getAddress()
-            );
+            currentId = new Identification(currentClient.getName(), currentClient.getAge(), currentClient.getAddress());
         }
 
-        // Randomly decide if balance sheet matches (30% chance of imbalance)
-        double debits = 1000.0 + random.nextDouble() * 500; // Random between 1000-1500
-        double credits = random.nextDouble() < 0.3 ? debits + random.nextInt(200) : debits; // Sometimes mismatch
+        double debits = 1000.0 + random.nextDouble() * 500;
+        double credits = random.nextDouble() < 0.3 ? debits + random.nextInt(200) : debits;
         currentBalanceSheet = new BalanceSheet(debits, credits);
 
-        // Update TextFlows
         updateTextFlows();
     }
 
@@ -141,33 +133,28 @@ public class GameScreenController {
             String scoreText = "Score: " + game.getScore() + "\nStrikes: " + game.getStrikes();
             Text scoreTextNode = new Text(scoreText);
             scoresAndStrikes.getChildren().add(scoreTextNode);
-            System.out.println("Updated TextFlows: " + scoreText + " | Children count: " + scoresAndStrikes.getChildren().size());
-            scoresAndStrikes.layout(); // Force layout refresh
         });
     }
 
     private void handleDecision(boolean errorsPresent) {
-        // Check if there are actual errors
         boolean idMismatch = !currentClient.getName().equals(currentId.getName()) ||
-                            currentClient.getAge() != currentId.getAge() ||
-                            !currentClient.getAddress().equals(currentId.getAddress());
+                             currentClient.getAge() != currentId.getAge() ||
+                             !currentClient.getAddress().equals(currentId.getAddress());
+
         boolean balanceMismatch = !currentBalanceSheet.isBalanced();
         boolean actualErrors = idMismatch || balanceMismatch;
 
-        // Award point for correct decision, strike for wrong decision
         if (errorsPresent == actualErrors) {
-            game.addPoint(); // +1 point for correct choice
+            game.addPoint();
         } else {
-            game.addStrike(); // +1 strike for wrong choice
+            game.addStrike();
         }
 
-        // Check if game is over after strike
         if (game.isGameOver()) {
             gameOver();
             return;
         }
 
-        // Load new client
         loadNewClient();
     }
 }
