@@ -2,17 +2,18 @@ package application;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import java.util.Random;
-
-import javafx.application.Platform;
 
 public class GameScreenController {
     private static final int GAME_DURATION_SECONDS = 600; // 10 minutes
@@ -37,14 +38,25 @@ public class GameScreenController {
     private TextFlow scoresAndStrikes;
     @FXML
     private Button cookedButton;
+    
     @FXML
     private Button bookedButton;
     @FXML
     private Button bookButton;
-
+    @FXML
+    private VBox rulesPane;
+    @FXML
+    private Label rulesLabel;
+    @FXML
     private Client currentClient;
+    @FXML
     private Identification currentId;
+    @FXML
     private BalanceSheet currentBalanceSheet;
+    @FXML
+    private TextFlow rulesTextFlow;
+    @FXML
+    private ImageView clientIdImageView;
 
     @FXML
     private void initialize() {
@@ -60,7 +72,7 @@ public class GameScreenController {
 
     private void startCountdown() {
         timeRemaining = GAME_DURATION_SECONDS;
-        
+
         countdownTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             timeRemaining--;
             updateTimerLabel();
@@ -68,7 +80,7 @@ public class GameScreenController {
                 gameOver();
             }
         }));
-        
+
         countdownTimer.setCycleCount(GAME_DURATION_SECONDS);
         countdownTimer.play();
     }
@@ -99,15 +111,13 @@ public class GameScreenController {
     }
 
     private void loadNewClient() {
-        // Create a new client (example data)
         currentClient = new Client("John Doe", 35, "123 Main St");
 
-        // Randomly decide if ID matches (30% chance of mismatch)
         if (random.nextDouble() < 0.3) {
             currentId = new Identification(
-                "Jane Doe",       // Mismatched name
-                40,               // Mismatched age
-                "456 Oak Ave"     // Mismatched address
+                "Jane Doe",
+                40,
+                "456 Oak Ave"
             );
         } else {
             currentId = new Identification(
@@ -117,12 +127,10 @@ public class GameScreenController {
             );
         }
 
-        // Randomly decide if balance sheet matches (30% chance of imbalance)
-        double debits = 1000.0 + random.nextDouble() * 500; // Random between 1000-1500
-        double credits = random.nextDouble() < 0.3 ? debits + random.nextInt(200) : debits; // Sometimes mismatch
+        double debits = 1000.0 + random.nextDouble() * 500;
+        double credits = random.nextDouble() < 0.3 ? debits + random.nextInt(200) : debits;
         currentBalanceSheet = new BalanceSheet(debits, credits);
 
-        // Update TextFlows
         updateTextFlows();
     }
 
@@ -142,32 +150,58 @@ public class GameScreenController {
             Text scoreTextNode = new Text(scoreText);
             scoresAndStrikes.getChildren().add(scoreTextNode);
             System.out.println("Updated TextFlows: " + scoreText + " | Children count: " + scoresAndStrikes.getChildren().size());
-            scoresAndStrikes.layout(); // Force layout refresh
+            scoresAndStrikes.layout();
         });
     }
 
     private void handleDecision(boolean errorsPresent) {
-        // Check if there are actual errors
         boolean idMismatch = !currentClient.getName().equals(currentId.getName()) ||
-                            currentClient.getAge() != currentId.getAge() ||
-                            !currentClient.getAddress().equals(currentId.getAddress());
+                             currentClient.getAge() != currentId.getAge() ||
+                             !currentClient.getAddress().equals(currentId.getAddress());
         boolean balanceMismatch = !currentBalanceSheet.isBalanced();
         boolean actualErrors = idMismatch || balanceMismatch;
 
-        // Award point for correct decision, strike for wrong decision
         if (errorsPresent == actualErrors) {
-            game.addPoint(); // +1 point for correct choice
+            game.addPoint();
         } else {
-            game.addStrike(); // +1 strike for wrong choice
+            game.addStrike();
         }
 
-        // Check if game is over after strike
         if (game.isGameOver()) {
             gameOver();
             return;
         }
 
-        // Load new client
         loadNewClient();
+    }
+
+    //  RULES WINDOW METHODS
+    @FXML
+    private void showRules() {
+        rulesTextFlow.getChildren().clear(); // Clear any existing content
+
+        RuleBook ruleBook = new RuleBook();
+        int ruleNumber = 1;
+
+        // Add a styled title
+        Text titleText = new Text("THE B.O.O.K RULES:\n\n");
+        titleText.setFont(Font.font("System", FontWeight.EXTRA_BOLD, 28));
+        rulesTextFlow.getChildren().add(titleText);
+
+        // Add each rule dynamically
+        for (Rule rule : ruleBook.getRules()) {
+            Text ruleText = new Text(ruleNumber + ". " + rule.getDescription() + "\n");
+            ruleText.setFont(Font.font("System", FontWeight.BOLD, 24));
+            rulesTextFlow.getChildren().add(ruleText);
+            ruleNumber++;
+        }
+
+        rulesPane.setVisible(true); // Keep this for showing the pane
+    }
+
+
+    @FXML
+    private void closeRules() {
+        rulesPane.setVisible(false);
     }
 }
