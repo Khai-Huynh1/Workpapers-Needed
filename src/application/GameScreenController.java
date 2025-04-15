@@ -1,25 +1,24 @@
 package application;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+import javafx.scene.text.*;
 import javafx.util.Duration;
 import java.util.Random;
+
 
 import javafx.application.Platform;
 
 public class GameScreenController {
-    private static final int GAME_DURATION_SECONDS = 600; // 10 minutes
+    private static int GAME_DURATION_SECONDS = 600; // 10 minutes
     private int timeRemaining;
     private Timeline countdownTimer;
     private Game game;
     private Random random = new Random();
+    private Timeline clientTimer;
 
     @FXML
     private VBox rootVBox;
@@ -45,12 +44,49 @@ public class GameScreenController {
     private Client currentClient;
     private Identification currentId;
     private BalanceSheet currentBalanceSheet;
+    @FXML
+    private Label clientTimeRemainingLabel;
+
+    @FXML
+    private Label clientTimerLabel;
+
+ // New method to handle client timer
+    private void startClientTimer() {
+        if (Game.isRushHourMode()) {
+            final int[] clientTimeRemaining = {10};
+            clientTimerLabel.setText(String.valueOf(clientTimeRemaining[0]));
+            
+            if (clientTimer != null) {
+                clientTimer.stop();
+            }
+            
+            clientTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+                clientTimeRemaining[0]--;
+                Platform.runLater(() -> {
+                    clientTimerLabel.setText(String.valueOf(clientTimeRemaining[0]));
+                });
+                if (clientTimeRemaining[0] <= 0) {
+                    game.addStrike();
+                    if (!game.isGameOver()) {
+                        loadNewClient();
+                    } else {
+                        gameOver();
+                    }
+                }
+            }));
+            
+            clientTimer.setCycleCount(10);
+            clientTimer.play();
+        }
+    }
 
     @FXML
     private void initialize() {
         game = new Game();
         startCountdown();
         loadNewClient();
+        clientTimeRemainingLabel.setVisible(Game.isRushHourMode());
+        clientTimerLabel.setVisible(Game.isRushHourMode());
 
         // Button event handlers
         cookedButton.setOnAction(e -> handleDecision(false)); // "COOKED" means no errors
@@ -83,6 +119,9 @@ public class GameScreenController {
 
     private void gameOver() {
         countdownTimer.stop();
+        if (clientTimer != null) {
+            clientTimer.stop(); // Add this line
+        }
         game.endGame();
         Platform.runLater(() -> {
             timerLabel.setText("GAME OVER");
@@ -124,6 +163,15 @@ public class GameScreenController {
 
         // Update TextFlows
         updateTextFlows();
+        startClientTimer();
+    }
+    
+    public static int getGameDurationSeconds() {
+        return GAME_DURATION_SECONDS;
+    }
+
+    public static void setGameDurationSeconds(int seconds) {
+        GAME_DURATION_SECONDS = seconds;
     }
 
     private void updateTextFlows() {
@@ -147,7 +195,10 @@ public class GameScreenController {
     }
 
     private void handleDecision(boolean errorsPresent) {
-        // Check if there are actual errors
+    	if (clientTimer != null) {
+            clientTimer.stop(); // Add this line
+        }
+    	// Check if there are actual errors
         boolean idMismatch = !currentClient.getName().equals(currentId.getName()) ||
                             currentClient.getAge() != currentId.getAge() ||
                             !currentClient.getAddress().equals(currentId.getAddress());
