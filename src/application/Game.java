@@ -5,8 +5,22 @@ import javafx.animation.Timeline;
 import javafx.util.Duration;
 
 public class Game {
-    private static final int MAX_STRIKES = 3;
+    private static int MAX_STRIKES = 3;
     private static final int GAME_DURATION_SECONDS = 600; // 10 minutes
+    
+
+    public static int getMaxStrikes() {
+        return MAX_STRIKES;
+    }
+
+    public static void setMaxStrikes(int strikes) {
+        if (strikes > 0) {
+            MAX_STRIKES = strikes;
+            System.out.println("Max strikes set to: " + MAX_STRIKES);
+        } else {
+            System.out.println("Invalid number of strikes.");
+        }
+    }
     
     private int strikes;
     private int score;
@@ -60,5 +74,16 @@ public class Game {
     
     public int getStrikes() {
         return strikes;
+    }
+    
+    private static boolean rushHourMode = false;
+
+    public static boolean isRushHourMode() {
+        return rushHourMode;
+    }
+
+    public static void setRushHourMode(boolean value) {
+        rushHourMode = value;
+        System.out.println("Rush Hour mode: " + rushHourMode);
     }
 }

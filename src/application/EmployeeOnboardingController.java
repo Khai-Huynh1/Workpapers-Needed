@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -19,9 +20,33 @@ import java.util.Random;
 public class EmployeeOnboardingController {
 
     @FXML
-    private TextFlow textFlow; // Bind this to your TextFlow in FXML
+    private TextFlow textFlow; 
     @FXML
     private TextFlow ruleTextFlow;
+    
+
+    @FXML
+    private CheckBox fastModeCheckBox;
+    
+    @FXML
+    private CheckBox rushhourCheckBox;
+    @FXML
+    private void handleRushHourToggle() {
+        boolean isRushHour = rushhourCheckBox.isSelected();
+        Game.setRushHourMode(isRushHour); // Update a static flag
+    }
+
+
+
+    @FXML
+    private void handleFastModeToggle() {
+        if (fastModeCheckBox.isSelected()) {
+            GameScreenController.setGameDurationSeconds(60); // Set to 1 minute
+        } else {
+            GameScreenController.setGameDurationSeconds(600); // Set to 10 minutes
+        }
+        System.out.println("Game duration is now: " + GameScreenController.getGameDurationSeconds());
+    }
 
     @FXML
     private void initialize() {
@@ -97,8 +122,18 @@ public class EmployeeOnboardingController {
         // Load new root (start-screen.fxml)
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/start-screen.fxml"));
         Parent root = loader.load();
-
-        // Swap root only (prevents flicker and keeps fullscreen/window state)
         scene.setRoot(root);
     }
+    
+    @FXML
+    private CheckBox unacceptableMistakesCheckBox;
+
+    @FXML
+    private void handleMistakesToggle() {
+        if (unacceptableMistakesCheckBox.isSelected()) {
+            Game.setMaxStrikes(1); // Set to 1 strike
+        } else {
+            Game.setMaxStrikes(3); // Set to 3 strikes
+        }
+}
 }
