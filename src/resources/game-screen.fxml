@@ -6,107 +6,112 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<VBox fx:id="rootVBox" alignment="CENTER" prefHeight="668.0" prefWidth="1320.0" style="-fx-background-color: gray;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GameScreenController">
-   <children>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-         <children>
-            <Label text="Shift Time Remaining:">
-               <font>
-                  <Font name="System Bold" size="24.0" />
-               </font>
+<StackPane fx:id="root" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.GameScreenController">
+
+    <!-- MAIN VBox content -->
+    <VBox fx:id="rootVBox" alignment="CENTER" prefHeight="668.0" prefWidth="1320.0" style="-fx-background-color: gray;">
+        <children>
+            <Label fx:id="timerLabel" alignment="CENTER" prefHeight="88.0" prefWidth="326.0" text="10:00" textAlignment="CENTER">
+                <font>
+                    <Font name="System Bold" size="36.0" />
+                </font>
+                <VBox.margin>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                </VBox.margin>
             </Label>
-            <Label fx:id="timerLabel" alignment="CENTER" prefHeight="42.0" prefWidth="326.0" textAlignment="CENTER">
-               <font>
-                  <Font name="System Bold" size="24.0" />
-               </font>
-               <VBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
-               </VBox.margin>
-            </Label>
-            <Label fx:id="clientTimeRemainingLabel" text="Client Time Remaining:" visible="false" />
-            <Label fx:id="clientTimerLabel" text="test" visible="false" />
-         </children>
-      </VBox>
-      <HBox alignment="CENTER" prefHeight="175.0" prefWidth="200.0">
-         <children>
-            <TextFlow fx:id="clientInfo" prefHeight="149.0" prefWidth="185.0" style="-fx-background-color: white;" textAlignment="CENTER">
-               <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </HBox.margin>
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="CLIENT INFORMATION" />
-               </children>
-            </TextFlow>
-            <ImageView fx:id="clientImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@placeholder-client.png" />
-               </image>
-               <HBox.margin>
-                  <Insets top="50.0" />
-               </HBox.margin>
-            </ImageView>
-            <TextFlow fx:id="scoresAndStrikes" prefHeight="200.0" prefWidth="200.0" textAlignment="CENTER">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="SCORES AND STRIKES" />
-               </children>
-               <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </HBox.margin>
-            </TextFlow>
-         </children>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </HBox>
-      <HBox alignment="TOP_CENTER" prefHeight="36.0" prefWidth="200.0">
-         <children>
-            <Button fx:id="cookedButton" mnemonicParsing="false" text="COOKED" textFill="#00fc19">
-               <HBox.margin>
-                  <Insets right="5.0" />
-               </HBox.margin>
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Button>
-            <Button fx:id="bookedButton" mnemonicParsing="false" text="BOOKED" textFill="RED">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Button>
-         </children>
-         <VBox.margin>
-            <Insets top="10.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox alignment="CENTER" prefHeight="194.0" prefWidth="757.0" style="-fx-background-color: tan;">
-         <children>
-            <Button fx:id="bookButton" mnemonicParsing="false" prefHeight="100.0" prefWidth="132.0" style="-fx-background-color: brown;" text="The B.O.O.K">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-               <HBox.margin>
-                  <Insets right="5.0" />
-               </HBox.margin>
-            </Button>
-            <TextFlow fx:id="identification" prefHeight="149.0" prefWidth="185.0" style="-fx-background-color: white;" textAlignment="CENTER">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="IDENTIFICATION" />
-               </children>
-               <HBox.margin>
-                  <Insets right="5.0" />
-               </HBox.margin>
-            </TextFlow>
-            <TextFlow fx:id="balanceSheet" prefHeight="149.0" prefWidth="185.0" style="-fx-background-color: white;" textAlignment="CENTER">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="BALANCE SHEET" />
-               </children>
-            </TextFlow>
-         </children>
-      </HBox>
-   </children>
-</VBox>
+
+            <HBox alignment="CENTER" prefHeight="175.0" prefWidth="200.0">
+                <children>
+                    <TextFlow fx:id="clientInfo" prefHeight="149.0" prefWidth="185.0" style="-fx-background-color: white;" textAlignment="CENTER">
+                        <children>
+                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="CLIENT INFORMATION" />
+                        </children>
+                        <HBox.margin>
+                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        </HBox.margin>
+                    </TextFlow>
+
+                    <ImageView fx:id="clientImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@placeholder-client.png" />
+                        </image>
+                        <HBox.margin>
+                            <Insets top="50.0" />
+                        </HBox.margin>
+                    </ImageView>
+
+                    <TextFlow fx:id="scoresAndStrikes" prefHeight="200.0" prefWidth="200.0" textAlignment="CENTER">
+                        <children>
+                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="SCORES AND STRIKES" />
+                        </children>
+                        <HBox.margin>
+                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        </HBox.margin>
+                    </TextFlow>
+                </children>
+            </HBox>
+
+            <HBox alignment="TOP_CENTER" prefHeight="36.0" prefWidth="200.0">
+                <children>
+                    <Button fx:id="cookedButton" mnemonicParsing="false" text="COOKED" textFill="#00fc19">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                        <HBox.margin>
+                            <Insets right="5.0" />
+                        </HBox.margin>
+                    </Button>
+                    <Button fx:id="bookedButton" mnemonicParsing="false" text="BOOKED" textFill="RED">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                    </Button>
+                </children>
+                <VBox.margin>
+                    <Insets top="10.0" />
+                </VBox.margin>
+            </HBox>
+
+            <HBox alignment="CENTER" prefHeight="194.0" prefWidth="757.0" style="-fx-background-color: tan;">
+                <children>
+                    <Button fx:id="bookButton" mnemonicParsing="false" onAction="#showRules" prefHeight="100.0" prefWidth="132.0" style="-fx-background-color: brown;" text="The B.O.O.K">
+                        <font>
+                            <Font name="System Bold" size="18.0" />
+                        </font>
+                        <HBox.margin>
+                            <Insets right="5.0" />
+                        </HBox.margin>
+                    </Button>
+
+                    <TextFlow fx:id="identification" prefHeight="149.0" prefWidth="185.0" style="-fx-background-color: white;" textAlignment="CENTER">
+                        <children>
+                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="IDENTIFICATION" />
+                     <ImageView fx:id="clientIdImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                        </children>
+                        <HBox.margin>
+                            <Insets right="5.0" />
+                        </HBox.margin>
+                    </TextFlow>
+
+                    <TextFlow fx:id="balanceSheet" prefHeight="149.0" prefWidth="185.0" style="-fx-background-color: white;" textAlignment="CENTER">
+                        <children>
+                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="BALANCE SHEET" />
+                        </children>
+                    </TextFlow>
+                </children>
+            </HBox>
+        </children>
+    </VBox>
+
+    <!-- Overlay sub-window for rules -->
+    <VBox fx:id="rulesPane" alignment="CENTER" prefHeight="300" prefWidth="400" spacing="10" style="-fx-background-color: white; -fx-border-color: black; -fx-border-width: 2;" visible="false">
+      <TextFlow fx:id="rulesTextFlow" prefHeight="200.0" prefWidth="200.0" />
+        <Button onAction="#closeRules" text="Close" />
+    </VBox>
+</StackPane>
