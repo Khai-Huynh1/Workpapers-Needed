@@ -25,6 +25,8 @@
                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                 </VBox.margin>
             </Label>
+            <Label fx:id="clientTimeRemainingLabel" text="Client Time Remaining:" visible="false" />
+            <Label fx:id="clientTimerLabel" text="test" visible="false" />
 
             <HBox alignment="CENTER" prefHeight="175.0" prefWidth="200.0">
                 <children>
