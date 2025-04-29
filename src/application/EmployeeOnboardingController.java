@@ -23,40 +23,48 @@ public class EmployeeOnboardingController {
     private TextFlow textFlow; 
     @FXML
     private TextFlow ruleTextFlow;
-    
-
     @FXML
     private CheckBox fastModeCheckBox;
-    
     @FXML
     private CheckBox rushhourCheckBox;
     @FXML
+    private CheckBox unacceptableMistakesCheckBox;
+
+    @FXML
     private void handleRushHourToggle() {
         boolean isRushHour = rushhourCheckBox.isSelected();
-        Game.setRushHourMode(isRushHour); // Update a static flag
+        Game.setRushHourMode(isRushHour);
     }
-
-
 
     @FXML
     private void handleFastModeToggle() {
-        if (fastModeCheckBox.isSelected()) {
-            GameScreenController.setGameDurationSeconds(60); // Set to 1 minute
+        boolean isFastMode = fastModeCheckBox.isSelected();
+        Game.setFastMode(isFastMode);
+        System.out.println("Fast mode: " + isFastMode);
+    }
+
+    @FXML
+    private void handleMistakesToggle() {
+        if (unacceptableMistakesCheckBox.isSelected()) {
+            Game.setMaxStrikes(1);
         } else {
-            GameScreenController.setGameDurationSeconds(600); // Set to 10 minutes
+            Game.setMaxStrikes(3);
         }
-        System.out.println("Game duration is now: " + GameScreenController.getGameDurationSeconds());
     }
 
     @FXML
     private void initialize() {
+        // Reset checkbox states to reflect Game modifier states
+        rushhourCheckBox.setSelected(Game.isRushHourMode());
+        fastModeCheckBox.setSelected(Game.isFastMode());
+        unacceptableMistakesCheckBox.setSelected(Game.getMaxStrikes() == 1);
+
         // Create the first part of the text ("GREETINGS")
         Text greetingText = new Text("GREETINGS ");
         greetingText.setFont(Font.font("System", FontWeight.NORMAL, 24));
 
-        // Generate a random employee number between 100 and 10000
         Random rand = new Random();
-        int employeeNumber = rand.nextInt(9901) + 100; // Range from 100 to 10000
+        int employeeNumber = rand.nextInt(9901) + 100;
         Text employeeText = new Text("EMPLOYEE #" + employeeNumber);
         employeeText.setFont(Font.font("System", FontWeight.BOLD, 20));
         employeeText.setFill(javafx.scene.paint.Color.RED);
@@ -73,7 +81,6 @@ public class EmployeeOnboardingController {
         threatText.setFont(Font.font("System", FontWeight.BOLD, 20));
         threatText.setFill(javafx.scene.paint.Color.RED);
 
-        // Clear any previous content and add both parts to the TextFlow
         textFlow.getChildren().clear();
         textFlow.getChildren().addAll(greetingText, employeeText, bodyText, threatText);
 
@@ -89,51 +96,24 @@ public class EmployeeOnboardingController {
 
     @FXML
     private void handleContinueClick(ActionEvent event) throws IOException {
-        System.out.println("Continue button clicked!");
-
-        // Get the current stage and scene
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Scene scene = stage.getScene(); // Keep the same scene
-
-        // Load new root (game-screen.fxml)
+        Scene scene = stage.getScene();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/game-screen.fxml"));
         Parent newRoot = loader.load();
 
-        // Fade-out transition
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), scene.getRoot());
         fadeOut.setFromValue(1.0);
         fadeOut.setToValue(0.0);
-
-        fadeOut.setOnFinished(e -> {
-            scene.setRoot(newRoot); // Change only the root, preserving window state
-        });
-
+        fadeOut.setOnFinished(e -> scene.setRoot(newRoot));
         fadeOut.play();
     }
 
     @FXML
     private void handleGoBackClick(ActionEvent event) throws IOException {
-        System.out.println("Go Home button clicked!");
-
-        // Get current scene
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = stage.getScene();
-
-        // Load new root (start-screen.fxml)
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/start-screen.fxml"));
         Parent root = loader.load();
         scene.setRoot(root);
     }
-    
-    @FXML
-    private CheckBox unacceptableMistakesCheckBox;
-
-    @FXML
-    private void handleMistakesToggle() {
-        if (unacceptableMistakesCheckBox.isSelected()) {
-            Game.setMaxStrikes(1); // Set to 1 strike
-        } else {
-            Game.setMaxStrikes(3); // Set to 3 strikes
-        }
-}
 }

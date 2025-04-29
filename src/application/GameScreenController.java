@@ -9,8 +9,15 @@ import javafx.scene.text.*;
 import javafx.util.Duration;
 import java.util.Random;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import java.io.IOException;
+
 public class GameScreenController {
-    private static int GAME_DURATION_SECONDS = 600; // 10 minutes
+    private static final int DEFAULT_GAME_DURATION_SECONDS = 600; // 10 minutes
+    private static final int FAST_MODE_DURATION_SECONDS = 60; // 1 minute
+    private static int GAME_DURATION_SECONDS = DEFAULT_GAME_DURATION_SECONDS;
     private int timeRemaining;
     private Timeline countdownTimer;
     private Game game;
@@ -33,7 +40,6 @@ public class GameScreenController {
     private TextFlow scoresAndStrikes;
     @FXML
     private Button cookedButton;
-    
     @FXML
     private Button bookedButton;
     @FXML
@@ -50,20 +56,47 @@ public class GameScreenController {
     private BalanceSheet currentBalanceSheet;
     @FXML
     private Label clientTimeRemainingLabel;
-
     @FXML
     private Label clientTimerLabel;
+    @FXML
+    private TextFlow rulesTextFlow;
+    @FXML
+    private ImageView clientIdImageView;
 
- // New method to handle client timer
+    @FXML
+    private void initialize() {
+        game = new Game();
+        // Set game duration based on fastMode
+        GAME_DURATION_SECONDS = Game.isFastMode() ? FAST_MODE_DURATION_SECONDS : DEFAULT_GAME_DURATION_SECONDS;
+        startCountdown();
+        loadNewClient();
+        clientTimeRemainingLabel.setVisible(Game.isRushHourMode());
+        clientTimerLabel.setVisible(Game.isRushHourMode());
+
+        cookedButton.setOnAction(e -> handleDecision(false));
+        bookedButton.setOnAction(e -> handleDecision(true));
+    }
+
+    private void startCountdown() {
+        timeRemaining = GAME_DURATION_SECONDS;
+        countdownTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            timeRemaining--;
+            updateTimerLabel();
+            if (timeRemaining <= 0) {
+                gameOver();
+            }
+        }));
+        countdownTimer.setCycleCount(GAME_DURATION_SECONDS);
+        countdownTimer.play();
+    }
+
     private void startClientTimer() {
         if (Game.isRushHourMode()) {
             final int[] clientTimeRemaining = {10};
             clientTimerLabel.setText(String.valueOf(clientTimeRemaining[0]));
-            
             if (clientTimer != null) {
                 clientTimer.stop();
             }
-            
             clientTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
                 clientTimeRemaining[0]--;
                 Platform.runLater(() -> {
@@ -78,43 +111,9 @@ public class GameScreenController {
                     }
                 }
             }));
-            
             clientTimer.setCycleCount(10);
             clientTimer.play();
         }
-    }
-    @FXML
-    private TextFlow rulesTextFlow;
-    @FXML
-    private ImageView clientIdImageView;
-
-    @FXML
-    private void initialize() {
-        game = new Game();
-        startCountdown();
-        loadNewClient();
-        clientTimeRemainingLabel.setVisible(Game.isRushHourMode());
-        clientTimerLabel.setVisible(Game.isRushHourMode());
-
-        // Button event handlers
-        cookedButton.setOnAction(e -> handleDecision(false)); // "COOKED" means no errors
-        bookedButton.setOnAction(e -> handleDecision(true));  // "BOOKED" means errors present
-        // bookButton left without action for future implementation
-    }
-
-    private void startCountdown() {
-        timeRemaining = GAME_DURATION_SECONDS;
-
-        countdownTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-            timeRemaining--;
-            updateTimerLabel();
-            if (timeRemaining <= 0) {
-                gameOver();
-            }
-        }));
-
-        countdownTimer.setCycleCount(GAME_DURATION_SECONDS);
-        countdownTimer.play();
     }
 
     private void updateTimerLabel() {
@@ -128,48 +127,30 @@ public class GameScreenController {
     private void gameOver() {
         countdownTimer.stop();
         if (clientTimer != null) {
-            clientTimer.stop(); // Add this line
+            clientTimer.stop();
         }
         game.endGame();
         Platform.runLater(() -> {
-            timerLabel.setText("GAME OVER");
-            clientInfo.getChildren().clear();
-            identification.getChildren().clear();
-            balanceSheet.getChildren().clear();
-            scoresAndStrikes.getChildren().clear();
-            String finalText = "Final Score: " + game.getScore() + "\nStrikes: " + game.getStrikes();
-            Text finalTextNode = new Text(finalText);
-            scoresAndStrikes.getChildren().add(finalTextNode);
-            System.out.println("Game Over Display: " + finalText + " | Children count: " + scoresAndStrikes.getChildren().size());
-            scoresAndStrikes.layout(); // Force layout refresh
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/game-over.fxml"));
+                Parent gameOverRoot = loader.load();
+                GameOverController controller = loader.getController();
+                controller.setFinalScore(game.getScore(), game.getStrikes());
+                Scene currentScene = timerLabel.getScene();
+                currentScene.setRoot(gameOverRoot);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            scoresAndStrikes.layout();
         });
     }
 
     private void loadNewClient() {
-        currentClient = new Client("John Doe", 35, "123 Main St");
-
-        if (random.nextDouble() < 0.3) {
-            currentId = new Identification(
-                "Jane Doe",
-                40,
-                "456 Oak Ave"
-            );
-        } else {
-            currentId = new Identification(
-                currentClient.getName(),
-                currentClient.getAge(),
-                currentClient.getAddress()
-            );
-        }
-
-        double debits = 1000.0 + random.nextDouble() * 500;
-        double credits = random.nextDouble() < 0.3 ? debits + random.nextInt(200) : debits;
-        currentBalanceSheet = new BalanceSheet(debits, credits);
-
+        game.generateNewClient();
         updateTextFlows();
         startClientTimer();
     }
-    
+
     public static int getGameDurationSeconds() {
         return GAME_DURATION_SECONDS;
     }
@@ -181,14 +162,11 @@ public class GameScreenController {
     private void updateTextFlows() {
         Platform.runLater(() -> {
             clientInfo.getChildren().clear();
-            clientInfo.getChildren().add(new Text(currentClient.toString()));
-
+            clientInfo.getChildren().add(new Text(game.getCurrentClient().toString()));
             identification.getChildren().clear();
-            identification.getChildren().add(new Text(currentId.toString()));
-
+            identification.getChildren().add(new Text(game.getCurrentId().toString()));
             balanceSheet.getChildren().clear();
-            balanceSheet.getChildren().add(new Text(currentBalanceSheet.toString()));
-
+            balanceSheet.getChildren().add(new Text(game.getCurrentBalanceSheet().toString()));
             scoresAndStrikes.getChildren().clear();
             String scoreText = "Score: " + game.getScore() + "\nStrikes: " + game.getStrikes();
             Text scoreTextNode = new Text(scoreText);
@@ -199,54 +177,36 @@ public class GameScreenController {
     }
 
     private void handleDecision(boolean errorsPresent) {
-    	if (clientTimer != null) {
-            clientTimer.stop(); // Add this line
+        if (clientTimer != null) {
+            clientTimer.stop();
         }
-    	// Check if there are actual errors
-        boolean idMismatch = !currentClient.getName().equals(currentId.getName()) ||
-                             currentClient.getAge() != currentId.getAge() ||
-                             !currentClient.getAddress().equals(currentId.getAddress());
-        boolean balanceMismatch = !currentBalanceSheet.isBalanced();
-        boolean actualErrors = idMismatch || balanceMismatch;
 
-        if (errorsPresent == actualErrors) {
-            game.addPoint();
-        } else {
-            game.addStrike();
-        }
+        game.evaluateDecision(errorsPresent);
 
         if (game.isGameOver()) {
             gameOver();
-            return;
+        } else {
+            loadNewClient();
         }
-
-        loadNewClient();
     }
 
-    //  RULES WINDOW METHODS
+
     @FXML
     private void showRules() {
-        rulesTextFlow.getChildren().clear(); // Clear any existing content
-
+        rulesTextFlow.getChildren().clear();
         RuleBook ruleBook = new RuleBook();
         int ruleNumber = 1;
-
-        // Add a styled title
         Text titleText = new Text("THE B.O.O.K RULES:\n\n");
         titleText.setFont(Font.font("System", FontWeight.EXTRA_BOLD, 28));
         rulesTextFlow.getChildren().add(titleText);
-
-        // Add each rule dynamically
         for (Rule rule : ruleBook.getRules()) {
             Text ruleText = new Text(ruleNumber + ". " + rule.getDescription() + "\n");
             ruleText.setFont(Font.font("System", FontWeight.BOLD, 24));
             rulesTextFlow.getChildren().add(ruleText);
             ruleNumber++;
         }
-
-        rulesPane.setVisible(true); // Keep this for showing the pane
+        rulesPane.setVisible(true);
     }
-
 
     @FXML
     private void closeRules() {
