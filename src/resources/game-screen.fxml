@@ -80,7 +80,7 @@
                 </VBox.margin>
             </HBox>
 
-            <HBox alignment="CENTER" prefHeight="194.0" prefWidth="757.0" style="-fx-background-color: tan;">
+            <HBox alignment="CENTER" prefHeight="218.0" prefWidth="1320.0" style="-fx-background-color: tan;">
                 <children>
                     <Button fx:id="bookButton" mnemonicParsing="false" onAction="#showRules" prefHeight="100.0" prefWidth="132.0" style="-fx-background-color: brown;" text="The B.O.O.K">
                         <font>
@@ -90,16 +90,36 @@
                             <Insets right="5.0" />
                         </HBox.margin>
                     </Button>
-
-                    <TextFlow fx:id="identification" prefHeight="149.0" prefWidth="185.0" style="-fx-background-color: white;" textAlignment="CENTER">
+               <VBox prefHeight="218.0" prefWidth="172.0">
+                  <children>
+                     <VBox prefHeight="200.0" prefWidth="100.0">
                         <children>
-                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="IDENTIFICATION" />
-                     <ImageView fx:id="clientIdImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                           <TextFlow prefHeight="50.0" prefWidth="114.0" style="-fx-background-color: white;" textAlignment="CENTER">
+                              <children>
+                                 <VBox alignment="TOP_CENTER" prefHeight="116.0" prefWidth="100.0">
+                                    <children>
+                                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="IDENTIFICATION" textAlignment="CENTER" />
+                                       <ImageView fx:id="clientIdImageView" fitHeight="77.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-color: white;">
+                                          <image>
+                                             <Image url="@placeholder-client.png" />
+                                          </image>
+                                       </ImageView>
+                                    </children>
+                                 </VBox>
+                              </children>
+                           </TextFlow>
+            
+                                      <TextFlow fx:id="identification" prefHeight="111.0" prefWidth="172.0" style="-fx-background-color: white;" textAlignment="CENTER" />
                         </children>
-                        <HBox.margin>
-                            <Insets right="5.0" />
-                        </HBox.margin>
-                    </TextFlow>
+                     </VBox>
+                  </children>
+                  <opaqueInsets>
+                     <Insets />
+                  </opaqueInsets>
+                  <HBox.margin>
+                     <Insets right="5.0" />
+                  </HBox.margin>
+               </VBox>
 
                     <TextFlow fx:id="balanceSheet" prefHeight="149.0" prefWidth="185.0" style="-fx-background-color: white;" textAlignment="CENTER">
                         <children>

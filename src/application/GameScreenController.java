@@ -3,6 +3,7 @@ package application;
 import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
@@ -13,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class GameScreenController {
     private static final int DEFAULT_GAME_DURATION_SECONDS = 600; // 10 minutes
@@ -65,7 +67,7 @@ public class GameScreenController {
 
     @FXML
     private void initialize() {
-    	AudioManager.getInstance().playMusic("/resources/clockTickingFX.mp3");
+        AudioManager.getInstance().playMusic("/resources/clockTickingFX.mp3");
         game = new Game();
         // Set game duration based on fastMode
         GAME_DURATION_SECONDS = Game.isFastMode() ? FAST_MODE_DURATION_SECONDS : DEFAULT_GAME_DURATION_SECONDS;
@@ -149,7 +151,45 @@ public class GameScreenController {
     private void loadNewClient() {
         game.generateNewClient();
         updateTextFlows();
+        updateClientImages();
         startClientTimer();
+    }
+
+    private void updateClientImages() {
+        Platform.runLater(() -> {
+            try {
+                // Load client image (images are directly under /resources/)
+                String clientImagePath = "/resources/" + game.getClientImage();
+                InputStream clientStream = getClass().getResourceAsStream(clientImagePath);
+                if (clientStream == null) {
+                    System.err.println("Cannot find resource: " + clientImagePath);
+                    clientImagePath = "/resources/placeholder-client.png"; // Fallback
+                    clientStream = getClass().getResourceAsStream(clientImagePath);
+                    if (clientStream == null) {
+                        System.err.println("Fallback resource not found: " + clientImagePath);
+                    }
+                }
+                clientImageView.setImage(new Image(clientStream));
+
+                // Load ID image (images are directly under /resources/)
+                String idImagePath = "/resources/" + game.getClientIdImage();
+                InputStream idStream = getClass().getResourceAsStream(idImagePath);
+                if (idStream == null) {
+                    System.err.println("Cannot find resource: " + idImagePath);
+                    idImagePath = "/resources/placeholder-client.png"; // Fallback
+                    idStream = getClass().getResourceAsStream(idImagePath);
+                    if (idStream == null) {
+                        System.err.println("Fallback resource not found: " + idImagePath);
+                    }
+                }
+                clientIdImageView.setImage(new Image(idStream));
+            } catch (Exception e) {
+                System.err.println("Error loading images: " + e.getMessage());
+                // Fallback to placeholder for both
+                clientImageView.setImage(new Image(getClass().getResourceAsStream("/resources/placeholder-client.png")));
+                clientIdImageView.setImage(new Image(getClass().getResourceAsStream("/resources/placeholder-client.png")));
+            }
+        });
     }
 
     public static int getGameDurationSeconds() {
@@ -178,8 +218,8 @@ public class GameScreenController {
     }
 
     private void handleDecision(boolean errorsPresent) {
-    	AudioManager.getInstance().playSoundEffect("/resources/stampFX.mp3");
-    	
+        AudioManager.getInstance().playSoundEffect("/resources/stampFX.mp3");
+        
         if (clientTimer != null) {
             clientTimer.stop();
         }
@@ -193,10 +233,9 @@ public class GameScreenController {
         }
     }
 
-
     @FXML
     private void showRules() {
-    	AudioManager.getInstance().playSoundEffect("/resources/pageFlipFX.mp3");
+        AudioManager.getInstance().playSoundEffect("/resources/pageFlipFX.mp3");
         rulesTextFlow.getChildren().clear();
         RuleBook ruleBook = new RuleBook();
         int ruleNumber = 1;
@@ -214,7 +253,7 @@ public class GameScreenController {
 
     @FXML
     private void closeRules() {
-    	AudioManager.getInstance().playSoundEffect("/resources/pageFlipFX.mp3");
+        AudioManager.getInstance().playSoundEffect("/resources/pageFlipFX.mp3");
         rulesPane.setVisible(false);
     }
 }

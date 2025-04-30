@@ -4,6 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -21,8 +22,13 @@ public class Game {
     private Client currentClient;
     private Identification currentId;
     private BalanceSheet currentBalanceSheet;
+    private String clientImage;
+    private String clientIdImage;
     private final Random random = new Random();
     private final ClientGenerator clientGenerator = new ClientGenerator();
+    private final List<String> clientImages = Arrays.asList(
+        "client1.jpg", "client2.jpg", "client3.jpg", "client4.jpg", "client5.png"
+    );
 
     public static int getMaxStrikes() {
         return MAX_STRIKES;
@@ -139,6 +145,15 @@ public class Game {
         double debits = 1000.0 + random.nextDouble() * 500;
         double credits = random.nextDouble() < 0.3 ? debits + random.nextInt(200) : debits;
         currentBalanceSheet = new BalanceSheet(debits, credits);
+
+        // Assign random client image
+        clientImage = clientImages.get(random.nextInt(clientImages.size()));
+        // 20% chance to reroll ID image for a potentially different one
+        if (random.nextDouble() < 0.2) {
+            clientIdImage = clientImages.get(random.nextInt(clientImages.size()));
+        } else {
+            clientIdImage = clientImage; // Same as client image
+        }
     }
 
     public boolean evaluateDecision(boolean errorsPresent) {
@@ -146,7 +161,8 @@ public class Game {
                             currentClient.getAge() != currentId.getAge() ||
                             !currentClient.getAddress().equals(currentId.getAddress());
         boolean balanceMismatch = !currentBalanceSheet.isBalanced();
-        boolean actualErrors = idMismatch || balanceMismatch;
+        boolean imageMismatch = !clientImage.equals(clientIdImage);
+        boolean actualErrors = idMismatch || balanceMismatch || imageMismatch;
 
         if (errorsPresent == actualErrors) {
             addPoint();
@@ -167,5 +183,13 @@ public class Game {
 
     public BalanceSheet getCurrentBalanceSheet() {
         return currentBalanceSheet;
+    }
+
+    public String getClientImage() {
+        return clientImage;
+    }
+
+    public String getClientIdImage() {
+        return clientIdImage;
     }
 }
