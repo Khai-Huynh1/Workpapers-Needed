@@ -22,6 +22,7 @@ public class Game {
     private Identification currentId;
     private BalanceSheet currentBalanceSheet;
     private final Random random = new Random();
+    private final ClientGenerator clientGenerator = new ClientGenerator();
 
     public static int getMaxStrikes() {
         return MAX_STRIKES;
@@ -54,7 +55,6 @@ public class Game {
         System.out.println("Fast mode: " + fastMode);
     }
 
-    // Reset all difficulty modifiers to their default values
     public static void resetModifiers() {
         MAX_STRIKES = DEFAULT_MAX_STRIKES;
         rushHourMode = DEFAULT_RUSH_HOUR_MODE;
@@ -128,10 +128,11 @@ public class Game {
     public static List<Integer> getScoreHistory() {
         return scoreHistory;
     }
+
     public void generateNewClient() {
-        currentClient = new Client("John Doe", 35, "123 Main St");
+        currentClient = clientGenerator.generateClient();
         if (random.nextDouble() < 0.3) {
-            currentId = new Identification("Jane Doe", 40, "456 Oak Ave");
+            currentId = clientGenerator.generateMismatchedId(currentClient);
         } else {
             currentId = new Identification(currentClient.getName(), currentClient.getAge(), currentClient.getAddress());
         }
@@ -142,8 +143,8 @@ public class Game {
 
     public boolean evaluateDecision(boolean errorsPresent) {
         boolean idMismatch = !currentClient.getName().equals(currentId.getName()) ||
-                             currentClient.getAge() != currentId.getAge() ||
-                             !currentClient.getAddress().equals(currentId.getAddress());
+                            currentClient.getAge() != currentId.getAge() ||
+                            !currentClient.getAddress().equals(currentId.getAddress());
         boolean balanceMismatch = !currentBalanceSheet.isBalanced();
         boolean actualErrors = idMismatch || balanceMismatch;
 
@@ -156,7 +157,6 @@ public class Game {
         }
     }
 
-    // Getters for the controller
     public Client getCurrentClient() {
         return currentClient;
     }
