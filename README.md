@@ -1,19 +1,27 @@
 # Workpapers-Needed
 
 ## Overview
-`Workpapers-Needed` is a JavaFX application developed as a collaborative project. This repository contains the source code for the application, which is designed to [insert project purpose here, e.g., "manage workpaper documentation for teams"]. The project is built using JavaFX 24 and requires JDK 24 to run. This README provides instructions for setting up and running the project in Eclipse.
+`Workpapers-Needed` is a JavaFX application developed as a collaborative project. This repository contains the source code for the application, the project is built using JavaFX 24 and requires JDK 24 to run. This README provides instructions for setting up and running the project in Eclipse.
 
 ## Repository Structure
 - **main**: The primary development branch where all stable features are merged.
 
-## Prerequisites
+## Prerequisites/Requirements (IDE MUST BE ECLIPSE)
 Before setting up the project, ensure you have the following installed:
 - **JDK 24**: The Java Development Kit (download from [Oracle](https://www.oracle.com/java/technologies/downloads/) or use an OpenJDK distribution like [Adoptium](https://adoptium.net/)).
 - **JavaFX 24**: The JavaFX SDK (download from [Gluon](https://gluonhq.com/products/javafx/)).
-- **Eclipse IDE**: Preferably the latest version of Eclipse IDE for Java Developers (download from [eclipse.org](https://www.eclipse.org/downloads/)).
-- **Git**: For cloning the repository (download from [git-scm.com](https://git-scm.com/)).
+- **JavaFX VM arguments** need to be set up as --module-path "DELETE-THIS-AND-REPLACE-WITH-FILEPATH-TO-WHERE-JAVAFX24-SDK-WAS-INSTALLED-\JAVAFXSDK24\Lib" --add-modules javafx.controls,javafx.fxml,javafx.media --enable-native-access=javafx.graphics
+- **Libraries and module/classpaths** JavaFX24 usermade library needs to be sent up on the build path under CLASSPATH, user made library consists of all external JAR files from the JDK24 SDK download folder SPECIFICALLY the ones in the subfolder "Lib." in ECLIPSE IDE under help and "Install New Software" a JavaFX plugin for eclipse must be downloaded download.eclipse.org/efxclipse/updates-nightly/repository.
 
-## Setup Instructions in Eclipse
+- ## Project Development Environment Set up Recap
+- **1. Use Eclipse**
+- **2. Download both JDK24 and JavaFX 24 from corresponding above sites**
+- **3. Set Up VM arguments for the project as --module-path "DELETE-THIS-AND-REPLACE-WITH-FILEPATH-TO-WHERE-JAVAFX-SDK-24\Lib-was-installed" --add-modules javafx.controls,javafx.fxml,javafx.media --enable-native-access=javafx.graphics**
+- **4. Download Eclipse JavaFX plugin from download.eclipse.org/efxclipse/updates-nightly/repository in eclipse using help > install new software**
+- **5. Create User Library in eclipse, naming the library "JavaFX24", import all external jars located in the javafx-sdk-24 >>> lib folder into this library**
+- **6. Double check class and module paths. JDK24 should be under module path (Eclipse is running JDK 24 essentially), the JavaFX24 user made library AND the plugin folder called "JavaFX SDK" should be both under classpath**
+
+## Setup Instructions in Eclipse (BELOW IS SET UP INSTRUCTIONS FOR DEVS, NON DEVS CAN IGNORE)
 
 ### 1. Clone the Repository
 1. Open Eclipse.
