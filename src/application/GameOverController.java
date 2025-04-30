@@ -25,6 +25,12 @@ public class GameOverController {
 
     @FXML
     private TextArea allAttemptsArea;
+    
+    @FXML
+    private void initialize() {
+    	AudioManager.getInstance().stopMusic();
+    	AudioManager.getInstance().playMusic("/resources/complainingFX.mp3");
+    }
 
     public void setFinalScore(int score, int strikes) {
         finalScoreLabel.setText("Final Score: " + score);
@@ -42,9 +48,11 @@ public class GameOverController {
     @FXML
     private void handlePlayAgain(ActionEvent event) {
         try {
+        	AudioManager.getInstance().playSoundEffect("/resources/clickFX.mp3");
             // Get the current stage and scene from the event source
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = stage.getScene();
+            AudioManager.getInstance().stopMusic();
 
             // Load the new root from the game screen FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/game-screen.fxml"));
@@ -62,10 +70,12 @@ public class GameOverController {
     @FXML
     private void handleMainMenu(ActionEvent event) throws IOException {
         try {
+        	AudioManager.getInstance().playSoundEffect("/resources/clickFX.mp3");
             // Get the current stage and scene from the event source
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = stage.getScene();
             Game.resetModifiers();
+            AudioManager.getInstance().stopMusic();
 
             // Load the new root from the game screen FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/start-screen.fxml"));

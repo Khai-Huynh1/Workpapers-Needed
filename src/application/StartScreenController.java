@@ -12,6 +12,12 @@ import javafx.event.ActionEvent;
 public class StartScreenController {
 	
 	@FXML
+    private void initialize() {
+        // Start music when the start screen loads
+        AudioManager.getInstance().playMusic("/resources/mainMenuMusic.mp3");
+    }
+	
+	@FXML
 	private void handleExitClick(ActionEvent event) {
 	    System.out.println("Exiting application...");
 	    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -21,6 +27,7 @@ public class StartScreenController {
 
     @FXML
     private void handleButtonClick(ActionEvent event) throws IOException {
+    	AudioManager.getInstance().playSoundEffect("/resources/clickFX.mp3");
         // Load the new FXML file
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/employee-onboarding.fxml"));
         Parent root = loader.load();

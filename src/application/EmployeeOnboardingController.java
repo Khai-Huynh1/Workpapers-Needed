@@ -32,12 +32,14 @@ public class EmployeeOnboardingController {
 
     @FXML
     private void handleRushHourToggle() {
+    	AudioManager.getInstance().playSoundEffect("/resources/clickFX.mp3");
         boolean isRushHour = rushhourCheckBox.isSelected();
         Game.setRushHourMode(isRushHour);
     }
 
     @FXML
     private void handleFastModeToggle() {
+    	AudioManager.getInstance().playSoundEffect("/resources/clickFX.mp3");
         boolean isFastMode = fastModeCheckBox.isSelected();
         Game.setFastMode(isFastMode);
         System.out.println("Fast mode: " + isFastMode);
@@ -45,6 +47,7 @@ public class EmployeeOnboardingController {
 
     @FXML
     private void handleMistakesToggle() {
+    	AudioManager.getInstance().playSoundEffect("/resources/clickFX.mp3");
         if (unacceptableMistakesCheckBox.isSelected()) {
             Game.setMaxStrikes(1);
         } else {
@@ -96,6 +99,8 @@ public class EmployeeOnboardingController {
 
     @FXML
     private void handleContinueClick(ActionEvent event) throws IOException {
+    	AudioManager.getInstance().playSoundEffect("/resources/clickFX.mp3");
+    	AudioManager.getInstance().stopMusic();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = stage.getScene();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/game-screen.fxml"));
@@ -110,6 +115,7 @@ public class EmployeeOnboardingController {
 
     @FXML
     private void handleGoBackClick(ActionEvent event) throws IOException {
+    	AudioManager.getInstance().playSoundEffect("/resources/clickFX.mp3");
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = stage.getScene();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/start-screen.fxml"));

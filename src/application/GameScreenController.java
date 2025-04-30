@@ -65,6 +65,7 @@ public class GameScreenController {
 
     @FXML
     private void initialize() {
+    	AudioManager.getInstance().playMusic("/resources/clockTickingFX.mp3");
         game = new Game();
         // Set game duration based on fastMode
         GAME_DURATION_SECONDS = Game.isFastMode() ? FAST_MODE_DURATION_SECONDS : DEFAULT_GAME_DURATION_SECONDS;
@@ -177,6 +178,8 @@ public class GameScreenController {
     }
 
     private void handleDecision(boolean errorsPresent) {
+    	AudioManager.getInstance().playSoundEffect("/resources/stampFX.mp3");
+    	
         if (clientTimer != null) {
             clientTimer.stop();
         }
@@ -193,6 +196,7 @@ public class GameScreenController {
 
     @FXML
     private void showRules() {
+    	AudioManager.getInstance().playSoundEffect("/resources/pageFlipFX.mp3");
         rulesTextFlow.getChildren().clear();
         RuleBook ruleBook = new RuleBook();
         int ruleNumber = 1;
@@ -210,6 +214,7 @@ public class GameScreenController {
 
     @FXML
     private void closeRules() {
+    	AudioManager.getInstance().playSoundEffect("/resources/pageFlipFX.mp3");
         rulesPane.setVisible(false);
     }
 }
