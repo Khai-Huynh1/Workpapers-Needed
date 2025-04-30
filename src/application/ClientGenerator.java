@@ -7,17 +7,24 @@ import java.util.Random;
 public class ClientGenerator {
     private final Random random = new Random();
     private final List<String> firstNames = Arrays.asList(
-        "John", "Jane", "Michael", "Sarah", "David", "Emily", "James", "Laura", "Robert", "Anna","Khai","Kenny","Ryan"
+    	    "John", "Jane", "Michael", "Sarah", "David", "Emily", "James", "Laura", "Robert", "Anna",
+    	    "Khai", "Kenny", "Ryan", "Lebron", "Thomas", "Olivia", "William", "Sophia", "Charles",
+    	    "Emma", "Daniel", "Ava", "Matthew", "Isabella", "Joseph", "Mia", "Billy", "Wojak", "Soyjak", "Chad"
     );
     private final List<String> lastNames = Arrays.asList(
-        "Doe", "Smith", "Johnson", "Brown", "Taylor", "Wilson", "Davis", "Clark", "Harris", "Lewis","Huynh","Nguyen","Masterton"
+    	    "Doe", "Smith", "Johnson", "Brown", "Taylor", "Wilson", "Davis", "Clark", "Harris", "Lewis",
+    	    "Huynh", "Nguyen", "Masterton", "James", "Thompson", "Garcia", "Martinez", "Robinson",
+    	    "Walker", "Young", "Allen", "King", "Wright", "Scott", "Torres", "Hill", "Bob", "Wojakerson", "Sojakerson", "Chaderson"
     );
     private final List<Integer> ages = Arrays.asList(
-        25, 28, 30, 32, 35, 38, 40, 42, 45, 50
+    	    25, 28, 30, 32, 35, 38, 40, 42, 45, 50, 22, 27, 33, 36, 39, 43, 47, 52, 55, 60, 65, 70
     );
     private final List<String> addresses = Arrays.asList(
-        "123 Main St", "456 Oak Ave", "789 Pine Rd", "101 Maple Dr", "202 Birch Ln",
-        "303 Cedar Ct", "404 Elm St", "505 Walnut Ave", "606 Spruce Rd", "707 Chestnut Dr"
+    	    "123 Main St", "456 Oak Ave", "789 Pine Rd", "101 Maple Dr", "202 Birch Ln",
+    	    "303 Cedar Ct", "404 Elm St", "505 Walnut Ave", "606 Spruce Rd", "707 Chestnut Dr",
+    	    "808 Willow Way", "909 Sycamore St", "111 Laurel Ln", "222 Hazel Dr", "333 Magnolia Ct",
+    	    "444 Poplar Ave", "555 Ash Rd", "666 Linden St", "777 Hickory Ln", "888 Olive Dr",
+    	    "999 Cedarwood Ct", "1010 Evergreen Ave"
     );
 
     public Client generateClient() {

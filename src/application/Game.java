@@ -27,7 +27,7 @@ public class Game {
     private final Random random = new Random();
     private final ClientGenerator clientGenerator = new ClientGenerator();
     private final List<String> clientImages = Arrays.asList(
-        "client1.jpg", "client2.jpg", "client3.jpg", "client4.jpg", "client5.png"
+        "client1.jpg", "client2.jpg", "client3.jpg", "client4.jpg", "client5.png", "client6.png", "client7.png", "client8.jpg"
     );
 
     public static int getMaxStrikes() {

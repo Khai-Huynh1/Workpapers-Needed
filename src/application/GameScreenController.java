@@ -203,7 +203,11 @@ public class GameScreenController {
     private void updateTextFlows() {
         Platform.runLater(() -> {
             clientInfo.getChildren().clear();
-            clientInfo.getChildren().add(new Text(game.getCurrentClient().toString()));
+            Client client = game.getCurrentClient();
+            String clientText = String.format("Hey, my name is %s, I am %d, and I live on %s", 
+                                             client.getName(), client.getAge(), client.getAddress());
+            clientInfo.getChildren().add(new Text(clientText));
+            
             identification.getChildren().clear();
             identification.getChildren().add(new Text(game.getCurrentId().toString()));
             balanceSheet.getChildren().clear();
